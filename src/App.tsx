@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container } from '@mui/material';
+import Dashboard from './components/Dashboard/Dashboard';
+import Login from './components/Login';
 
-function App() {
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
+
+const App: React.FC = () => {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+  const [refresh, setRefresh] = useState(0);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">
+            Expense Manager
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth="lg" style={{ marginTop: '2rem' }}>
+      {!isLoggedIn ? (
+          <Login onLogin={handleLogin} />
+        ) : (
+          <>
+            <Dashboard />
+          </>
+        )}
+      </Container>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
